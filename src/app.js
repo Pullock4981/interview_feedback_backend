@@ -18,8 +18,20 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: env.corsOrigins,
-    credentials: true, // required so the httpOnly refresh-token cookie is sent/received
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      
+      if (
+        env.corsOrigins.includes(origin) ||
+        origin.includes('localhost') ||
+        origin.includes('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      
+      return callback(new Error('CORS not allowed'), false);
+    },
+    credentials: true,
   })
 );
 app.use(express.json({ limit: '1mb' }));
