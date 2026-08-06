@@ -22,17 +22,20 @@ async function connectDB() {
 
   mongoose.set('strictQuery', true);
 
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+
   try {
     await mongoose.connect(env.mongoUri, {
-      // Mongoose 8 / MongoDB driver 4+ no longer need useNewUrlParser/useUnifiedTopology,
-      // they are always on. Keeping the options object here for any future overrides.
-      autoIndex: env.nodeEnv !== 'production', // avoid index builds on every boot in prod
+      autoIndex: env.nodeEnv !== 'production',
     });
 
     logger.info(`MongoDB connected: ${mongoose.connection.host}`);
   } catch (err) {
     logger.error({ err }, 'MongoDB connection failed');
-    process.exit(1);
+    // Don't exit process in serverless, just throw error
+    throw err;
   }
 
   mongoose.connection.on('disconnected', () => {
