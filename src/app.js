@@ -35,7 +35,11 @@ if (env.nodeEnv !== 'production') {
 // General rate limiting (auth endpoints have their own stricter limiter)
 app.use('/api', generalLimiter);
 
-// --- Health check (useful for container/orchestration probes) ---
+// --- Health check and Root route ---
+app.get('/', (req, res) => {
+  res.status(200).json({ success: true, message: 'Welcome to IFMS Backend API', data: null, error: null });
+});
+
 app.get('/health', (req, res) => {
   res.status(200).json({ success: true, data: { status: 'ok' }, error: null });
 });
