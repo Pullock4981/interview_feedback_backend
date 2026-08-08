@@ -49,11 +49,23 @@ app.use('/api', generalLimiter);
 
 // --- Health check and Root route ---
 app.get('/', (req, res) => {
-  res.status(200).json({ success: true, message: 'Welcome to IFMS Backend API', data: null, error: null });
+  res.status(200).json({ success: true, message: 'Welcome to EvaLens Backend API', data: null, error: null });
 });
 
 app.get('/health', (req, res) => {
   res.status(200).json({ success: true, data: { status: 'ok' }, error: null });
+});
+
+const connectDB = require('./config/db');
+
+// --- Ensure DB connection for Serverless environments ---
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // --- API routes ---

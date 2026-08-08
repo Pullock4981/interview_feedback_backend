@@ -13,7 +13,7 @@ async function start() {
   await connectDB();
 
   const server = app.listen(env.port, () => {
-    logger.info(`IFMS backend listening on port ${env.port} (${env.nodeEnv})`);
+    logger.info(`EvaLens backend listening on port ${env.port} (${env.nodeEnv})`);
   });
 
   // Graceful shutdown - let in-flight requests finish before exiting

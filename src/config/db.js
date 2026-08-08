@@ -12,39 +12,46 @@ const logger = require('../common/utils/logger');
  * can restart it and surface the failure instead of the app limping
  * along without a database.
  */
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
 async function connectDB() {
   if (!env.mongoUri) {
-    logger.error(
-      'MONGO_URI is not set. Add your MongoDB connection string to .env before starting the server.'
-    );
+    logger.error('MONGO_URI is not set.');
     process.exit(1);
   }
 
-  mongoose.set('strictQuery', true);
+  if (cached.conn) {
+    return cached.conn;
+  }
 
-  if (mongoose.connection.readyState >= 1) {
-    return;
+  if (!cached.promise) {
+    mongoose.set('strictQuery', true);
+    cached.promise = mongoose.connect(env.mongoUri, {
+      autoIndex: env.nodeEnv !== 'production',
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    }).then((mongoose) => {
+      logger.info(`MongoDB connected: ${mongoose.connection.host}`);
+      return mongoose;
+    }).catch(err => {
+      logger.error({ err }, 'MongoDB connection failed');
+      cached.promise = null;
+      throw err;
+    });
   }
 
   try {
-    await mongoose.connect(env.mongoUri, {
-      autoIndex: env.nodeEnv !== 'production',
-    });
-
-    logger.info(`MongoDB connected: ${mongoose.connection.host}`);
-  } catch (err) {
-    logger.error({ err }, 'MongoDB connection failed');
-    // Don't exit process in serverless, just throw error
-    throw err;
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
   }
 
-  mongoose.connection.on('disconnected', () => {
-    logger.warn('MongoDB disconnected');
-  });
-
-  mongoose.connection.on('error', (err) => {
-    logger.error({ err }, 'MongoDB connection error');
-  });
+  return cached.conn;
 }
 
 module.exports = connectDB;
