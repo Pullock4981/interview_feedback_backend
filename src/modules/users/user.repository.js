@@ -93,22 +93,22 @@ const userRepository = {
           },
           strongHireCount: {
             $size: {
-              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Strong Hire'] } }
+              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Strongly Recommended (Potential Candidate)'] } }
             }
           },
           hireCount: {
             $size: {
-              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Hire'] } }
+              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Recommended'] } }
             }
           },
           maybeCount: {
             $size: {
-              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Maybe'] } }
+              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Need Improvement'] } }
             }
           },
           rejectCount: {
             $size: {
-              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Reject'] } }
+              $filter: { input: '$feedbacks', as: 'f', cond: { $eq: ['$$f.finalRecommendation', 'Not Recommended'] } }
             }
           },
         }

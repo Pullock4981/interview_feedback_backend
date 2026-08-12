@@ -11,7 +11,7 @@ const ROLES = Object.freeze({
 
 const LEVELS = Object.freeze(['Excellent', 'Good', 'Average', 'Poor']);
 
-const RECOMMENDATIONS = Object.freeze(['Strong Hire', 'Hire', 'Maybe', 'Reject']);
+const RECOMMENDATIONS = Object.freeze(['Strongly Recommended (Potential Candidate)', 'Recommended', 'Need Improvement', 'Not Recommended']);
 
 const EVALUATION_RESULTS = Object.freeze(['Correct', 'Partial', 'Incorrect']);
 
