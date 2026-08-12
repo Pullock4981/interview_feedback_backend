@@ -50,17 +50,7 @@ function assertFinalReady(feedback) {
     missing.push('cameraOn');
   }
 
-  // Check if technicalEvaluation object has at least one topic evaluated
-  let hasEvaluations = false;
-  if (feedback.technicalEvaluation && typeof feedback.technicalEvaluation === 'object') {
-    for (const cat of Object.values(feedback.technicalEvaluation)) {
-      if (cat.topics && cat.topics.length > 0) {
-        hasEvaluations = true;
-        break;
-      }
-    }
-  }
-  if (!hasEvaluations) missing.push('technicalEvaluation (at least one topic)');
+  // Technical evaluation is completely optional (per user request)
 
   if (missing.length > 0) {
     throw new ValidationError(
