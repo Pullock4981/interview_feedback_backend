@@ -3,7 +3,7 @@ const catchAsync = require('../../common/utils/catchAsync');
 const { sendSuccess } = require('../../common/utils/response');
 const env = require('../../config/env');
 
-const REFRESH_COOKIE_NAME = 'evalens_refresh_token';
+const REFRESH_COOKIE_NAME = 'nexview_refresh_token';
 
 /** Shared cookie options so login/refresh/logout stay consistent. */
 function refreshCookieOptions() {

@@ -1,7 +1,7 @@
 {
   "name": "ifms-backend",
   "version": "1.0.0",
-  "description": "Interview Feedback Management System (IFMS) - Backend API",
+  "description": "NexView - Backend API",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {

@@ -1,4 +1,4 @@
-# IFMS Backend — Interview Feedback Management System
+# NexView Backend
 
 Node.js + Express + MongoDB (Mongoose) backend for IFMS, built to the
 PRD/Technical Design document. Implements a **3-layer architecture**

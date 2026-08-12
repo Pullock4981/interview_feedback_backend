@@ -49,7 +49,7 @@ app.use('/api', generalLimiter);
 
 // --- Health check and Root route ---
 app.get('/', (req, res) => {
-  res.status(200).json({ success: true, message: 'Welcome to EvaLens Backend API', data: null, error: null });
+  res.status(200).json({ success: true, message: 'Welcome to NexView Backend API', data: null, error: null });
 });
 
 app.get('/health', (req, res) => {
