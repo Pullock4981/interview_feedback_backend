@@ -10,8 +10,8 @@ function refreshCookieOptions() {
   return {
     httpOnly: true,
     secure: env.cookies.secure,
-    sameSite: 'lax',
-    domain: env.cookies.domain,
+    sameSite: env.cookies.secure ? 'none' : 'lax',
+    domain: env.cookies.domain !== 'localhost' ? env.cookies.domain : undefined,
     path: '/api/v1/auth',
   };
 }
