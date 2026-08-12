@@ -80,6 +80,7 @@ const studentService = {
           const existingInterview = await Interview.findOne({ 
             student: existing._id, 
             instructor: row.assignedInstructorId,
+            course: row.course || 'N/A',
             status: { $in: ['Assigned', 'Interview Started', 'Draft Saved'] }
           });
           if (!existingInterview) {
@@ -117,6 +118,7 @@ const studentService = {
         const existingInterview = await Interview.findOne({ 
           student: newStudent._id, 
           instructor: row.assignedInstructorId,
+          course: row.course || 'N/A',
           status: { $in: ['Assigned', 'Interview Started', 'Draft Saved'] }
         });
         if (!existingInterview) {
