@@ -60,6 +60,12 @@ const userService = {
     return userRepository.getInstructorStats();
   },
 
+  async deleteUser(id) {
+    const user = await userRepository.deleteById(id);
+    if (!user) throw new NotFoundError('User not found');
+    return sanitize(user);
+  },
+
   async getInstructorInterviews(instructorId) {
     const data = await userRepository.getInstructorInterviews(instructorId);
     if (!data || data.length === 0) {

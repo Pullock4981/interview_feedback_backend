@@ -42,6 +42,8 @@ const interviewService = {
       interview = await interviewRepository.create({
         student: studentId,
         instructor: instructor._id,
+        course: student.course,
+        batch: student.batch,
         status: 'Interview Started',
         startedAt: new Date(),
       });
@@ -124,6 +126,22 @@ const interviewService = {
 
   getLogs(interviewId) {
     return interviewRepository.listLogs(interviewId);
+  },
+
+  async deleteInterview(id, user) {
+    const interview = await this.getInterviewById(id, user);
+    const deleted = await interviewRepository.deleteById(id);
+    if (!deleted) throw new NotFoundError('Interview not found');
+    return deleted;
+  },
+
+  async deleteByCourse(course, user) {
+    let instructorId = null;
+    if (user.role === 'instructor') {
+      instructorId = user._id;
+    }
+    const result = await interviewRepository.deleteByCourse(course, instructorId);
+    return result;
   },
 };
 

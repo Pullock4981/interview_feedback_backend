@@ -37,9 +37,18 @@ const updateStudentSchema = z.object({
   slot: z.string().trim().optional(),
 });
 
+const createManualStudentSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  email: z.string().email(),
+  course: z.string().trim().optional(),
+  level: z.string().trim().optional(),
+  batch: z.string().trim().optional(),
+});
+
 module.exports = {
   listStudentsQuerySchema,
   importStudentsSchema,
   assignInstructorSchema,
   updateStudentSchema,
+  createManualStudentSchema,
 };

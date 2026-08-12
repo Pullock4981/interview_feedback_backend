@@ -10,6 +10,7 @@ const {
   importStudentsSchema,
   assignInstructorSchema,
   updateStudentSchema,
+  createManualStudentSchema,
 } = require('./student.validation');
 
 const router = express.Router();
@@ -22,6 +23,11 @@ router.post(
   '/import',
   validateRequest({ body: importStudentsSchema }),
   studentController.import
+);
+router.post(
+  '/manual',
+  validateRequest({ body: createManualStudentSchema }),
+  studentController.createManual
 );
 router.get(
   '/import-logs',

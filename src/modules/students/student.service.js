@@ -74,11 +74,17 @@ const studentService = {
           require('../interviews/interview.model');
           const Interview = mongoose.model('Interview');
 
-          const existingInterview = await Interview.findOne({ student: existing._id, instructor: row.assignedInstructorId });
+          const existingInterview = await Interview.findOne({ 
+            student: existing._id, 
+            instructor: row.assignedInstructorId,
+            status: { $in: ['Assigned', 'Interview Started', 'Draft Saved'] }
+          });
           if (!existingInterview) {
             await Interview.create({
               student: existing._id,
               instructor: row.assignedInstructorId,
+              course: row.course || 'N/A',
+              batch: row.batch || 'N/A',
               status: 'Assigned'
             });
           }
@@ -104,11 +110,20 @@ const studentService = {
       });
       
       if (row.assignedInstructorId) {
-        await Interview.create({
-          student: newStudent._id,
+        const existingInterview = await Interview.findOne({ 
+          student: newStudent._id, 
           instructor: row.assignedInstructorId,
-          status: 'Assigned'
+          status: { $in: ['Assigned', 'Interview Started', 'Draft Saved'] }
         });
+        if (!existingInterview) {
+          await Interview.create({
+            student: newStudent._id,
+            instructor: row.assignedInstructorId,
+            course: row.course || 'N/A',
+            batch: row.batch || 'N/A',
+            status: 'Assigned'
+          });
+        }
       }
       
       createdCount += 1;
@@ -132,6 +147,48 @@ const studentService = {
       errorDetails,
       logId: log._id,
     };
+  },
+
+  async createManualStudent({ name, email, course, level, batch, instructorId }) {
+    email = String(email).trim().toLowerCase();
+    let student = await studentRepository.findByEmail(email);
+
+    const updates = { assignedInstructor: instructorId };
+    if (name) updates.name = name;
+    if (course) updates.course = course;
+    if (level) updates.level = level;
+    if (batch) updates.batch = batch;
+
+    if (student) {
+      student = await studentRepository.updateById(student._id, updates);
+    } else {
+      student = await studentRepository.create({
+        name,
+        email,
+        course: course || 'N/A',
+        batch: batch || 'N/A',
+        level: level || 'N/A',
+        assignedInstructor: instructorId,
+        source: 'manual',
+      });
+    }
+
+    const mongoose = require('mongoose');
+    require('../interviews/interview.model');
+    const Interview = mongoose.model('Interview');
+
+    let interview = await Interview.findOne({ student: student._id, status: { $in: ['Assigned', 'Interview Started', 'Draft Saved'] } });
+    if (!interview) {
+      interview = await Interview.create({
+        student: student._id,
+        instructor: instructorId,
+        course: student.course,
+        batch: student.batch,
+        status: 'Assigned'
+      });
+    }
+
+    return { student, interview };
   },
 
   async listStudents({ user, ...filters }) {

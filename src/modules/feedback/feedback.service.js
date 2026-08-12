@@ -12,7 +12,6 @@ const { ROLES, EVALUATION_RESULTS } = require('../../common/constants/enums');
 /** Fields required for a valid FINAL submission (PRD Section 9.8). */
 const REQUIRED_ON_FINAL = [
   'interpersonalLevel',
-  'problemSolvingLevel',
   'finalRecommendation',
 ];
 

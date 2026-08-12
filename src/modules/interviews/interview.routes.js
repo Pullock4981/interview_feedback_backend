@@ -33,4 +33,15 @@ router.patch(
   interviewController.cancel
 );
 
+router.delete(
+  '/bulk/:courseName',
+  interviewController.deleteByCourse
+);
+
+router.delete(
+  '/:id',
+  validateRequest({ params: idParamSchema }),
+  interviewController.delete
+);
+
 module.exports = router;

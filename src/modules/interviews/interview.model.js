@@ -13,6 +13,8 @@ const interviewSchema = new mongoose.Schema(
   {
     student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
     instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    course: { type: String, default: 'N/A' },
+    batch: { type: String, default: 'N/A' },
     status: { type: String, enum: INTERVIEW_STATUSES, default: 'Assigned' },
     scheduledAt: { type: Date, default: null },
     startedAt: { type: Date, default: null },

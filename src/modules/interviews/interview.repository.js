@@ -49,6 +49,18 @@ const interviewRepository = {
     return Interview.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
   },
 
+  deleteById(id) {
+    return Interview.findByIdAndDelete(id);
+  },
+
+  deleteByCourse(course, instructorId) {
+    const query = { course };
+    if (instructorId) {
+      query.instructor = instructorId;
+    }
+    return Interview.deleteMany(query);
+  },
+
   addLog(data) {
     return InterviewLog.create(data);
   },

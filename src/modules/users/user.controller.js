@@ -43,6 +43,11 @@ const userController = {
     return sendSuccess(res, { data: stats });
   }),
 
+  delete: catchAsync(async (req, res) => {
+    const user = await userService.deleteUser(req.params.id);
+    return sendSuccess(res, { data: user });
+  }),
+
   getInstructorInterviews: catchAsync(async (req, res) => {
     const data = await userService.getInstructorInterviews(req.params.id);
     return sendSuccess(res, { data });

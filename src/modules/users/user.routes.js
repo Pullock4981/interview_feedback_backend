@@ -36,5 +36,10 @@ router.patch(
   validateRequest({ params: idParamSchema }),
   userController.reactivate
 );
+router.delete(
+  '/:id',
+  validateRequest({ params: idParamSchema }),
+  userController.delete
+);
 
 module.exports = router;

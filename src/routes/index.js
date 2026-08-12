@@ -8,6 +8,8 @@ const feedbackRoutes = require('../modules/feedback/feedback.routes');
 const technologyRoutes = require('../modules/technologies/technology.routes');
 const dashboardRoutes = require('../modules/dashboard/dashboard.routes');
 const managerNoteRoutes = require('../modules/managerNotes/managerNote.routes');
+const questionRoutes = require('../modules/questions/question.routes');
+const courseTemplateRoutes = require('../modules/courseTemplates/courseTemplate.routes');
 
 /**
  * Aggregates every module's router under /api/v1/<module>. Keeping
@@ -24,5 +26,7 @@ router.use('/feedback', feedbackRoutes);
 router.use('/technologies', technologyRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/manager-notes', managerNoteRoutes);
+router.use('/questions', questionRoutes);
+router.use('/course-templates', courseTemplateRoutes);
 
 module.exports = router;

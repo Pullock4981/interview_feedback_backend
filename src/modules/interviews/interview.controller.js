@@ -34,6 +34,16 @@ const interviewController = {
     const logs = await interviewService.getLogs(req.params.id);
     return sendSuccess(res, { data: logs });
   }),
+
+  delete: catchAsync(async (req, res) => {
+    const interview = await interviewService.deleteInterview(req.params.id, req.user);
+    return sendSuccess(res, { data: interview });
+  }),
+
+  deleteByCourse: catchAsync(async (req, res) => {
+    const result = await interviewService.deleteByCourse(req.params.courseName, req.user);
+    return sendSuccess(res, { data: result });
+  }),
 };
 
 module.exports = interviewController;

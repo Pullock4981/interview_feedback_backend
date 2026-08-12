@@ -25,6 +25,14 @@ const studentController = {
     return sendSuccess(res, { statusCode: 201, data: result });
   }),
 
+  createManual: catchAsync(async (req, res) => {
+    const result = await studentService.createManualStudent({
+      ...req.body,
+      instructorId: req.user._id,
+    });
+    return sendSuccess(res, { statusCode: 201, data: result });
+  }),
+
   assignInstructor: catchAsync(async (req, res) => {
     const student = await studentService.assignInstructor(req.params.id, req.body.instructorId);
     return sendSuccess(res, { data: student });

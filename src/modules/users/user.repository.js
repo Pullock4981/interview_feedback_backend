@@ -52,6 +52,10 @@ const userRepository = {
     return User.findByIdAndUpdate(id, { isActive }, { new: true });
   },
 
+  deleteById(id) {
+    return User.findByIdAndDelete(id);
+  },
+
   async getInstructorStats() {
     return User.aggregate([
       { $match: { role: 'instructor' } },
