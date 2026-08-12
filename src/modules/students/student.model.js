@@ -23,6 +23,7 @@ const studentSchema = new mongoose.Schema(
     slot: { type: String, trim: true, default: null },
     assignedInstructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     source: { type: String, enum: STUDENT_SOURCES, default: 'google_sheet' },
+    metadata: { type: mongoose.Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }
 );

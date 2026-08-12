@@ -61,6 +61,9 @@ const studentService = {
         if (row.level) updates.level = row.level;
         if (row.slot) updates.slot = row.slot;
         if (row.assignedInstructorId) updates.assignedInstructor = row.assignedInstructorId;
+        if (row.metadata && Object.keys(row.metadata).length > 0) {
+          updates.metadata = { ...(existing.metadata || {}), ...row.metadata };
+        }
 
         if (Object.keys(updates).length > 0) {
           await studentRepository.updateById(existing._id, updates);
@@ -107,6 +110,7 @@ const studentService = {
         slot: row.slot || null,
         assignedInstructor: row.assignedInstructorId || null,
         source: 'google_sheet',
+        metadata: row.metadata || {},
       });
       
       if (row.assignedInstructorId) {
