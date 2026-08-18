@@ -76,6 +76,40 @@ See `.env.example` for the full list with comments. The only one you
 must fill in to get started is `MONGO_URI`. Everything else has a
 sane development default.
 
+env.example
+
+# Server
+NODE_ENV=development
+PORT=5000
+
+# MongoDB
+# Fill this in later with your real Atlas / self-hosted connection string.
+# Example: mongodb+srv://<user>:<password>@cluster0.mongodb.net/ifms?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<db_username>:8VDiqQQzEY9eHSbU@cluster0.u2x9tqz.mongodb.net/?appName=Cluster0
+
+# JWT Auth
+# Use long, random, high-entropy strings in real environments (openssl rand -hex 64)
+JWT_ACCESS_SECRET=replace-with-a-long-random-secret
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=replace-with-a-different-long-random-secret
+JWT_REFRESH_EXPIRES_IN=7d
+
+# Cookies
+COOKIE_SECURE=false
+COOKIE_DOMAIN=localhost
+
+# CORS - comma separated list of allowed origins
+CORS_ORIGINS=http://localhost:3000
+
+# Rate limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX=100
+AUTH_RATE_LIMIT_MAX=5
+
+# Bcrypt
+BCRYPT_SALT_ROUNDS=12
+
+
 ## API Overview
 
 The API is fully documented and structured under the `/api/v1` base path.
