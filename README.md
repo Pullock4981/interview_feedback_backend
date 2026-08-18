@@ -78,6 +78,8 @@ sane development default.
 
 ## API Overview
 
+The API is fully documented and structured under the `/api/v1` base path.
+
 Base path: `/api/v1`. Every route except `/auth/login`, `/auth/refresh`,
 `/auth/forgot-password`, and `/auth/reset-password` requires
 `Authorization: Bearer <accessToken>`.
