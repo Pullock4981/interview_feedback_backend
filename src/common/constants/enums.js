@@ -9,7 +9,7 @@ const ROLES = Object.freeze({
   INSTRUCTOR: 'instructor',
 });
 
-const LEVELS = Object.freeze(['Excellent', 'Good', 'Average', 'Poor']);
+const LEVELS = Object.freeze(['Excellent', 'Good', 'Average', 'Below Average', 'Poor']);
 
 const RECOMMENDATIONS = Object.freeze(['Strongly Recommended (Potential Candidate)', 'Recommended', 'Need Improvement', 'Not Recommended']);
 
