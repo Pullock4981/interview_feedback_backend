@@ -1,39 +1,51 @@
-const jwt = require('jsonwebtoken');
-const env = require('../../config/env');
-const { UnauthorizedError } = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../../modules/users/user.model');
+const { ROLES } = require('../constants/enums');
+
+let defaultUser = null;
 
 /**
- * Verifies the JWT access token sent in the Authorization header
- * ("Bearer <token>") and attaches the authenticated user to req.user.
- *
- * We re-fetch the user (instead of trusting the JWT payload alone) so
- * that a deactivated/deleted user is rejected immediately, even if
- * their access token hasn't expired yet. This costs one extra DB read
- * per request but is important for instant revocation (see PRD 14.1).
+ * Direct access middleware:
+ * Attaches an active user to req.user for database references.
+ * Never blocks or fails a request.
  */
 const authenticate = catchAsync(async (req, res, next) => {
-  const authHeader = req.headers.authorization || '';
-  const [scheme, token] = authHeader.split(' ');
+  if (!defaultUser) {
+    try {
+      defaultUser = await User.findOne({ isActive: true });
+      if (!defaultUser) {
+        defaultUser = await User.findOne({});
+      }
+    } catch (err) {
+      // ignore DB read error
+    }
 
-  if (scheme !== 'Bearer' || !token) {
-    throw new UnauthorizedError('Missing or malformed Authorization header');
+    if (!defaultUser) {
+      try {
+        defaultUser = await User.create({
+          name: 'Default User',
+          email: 'admin@nexview.local',
+          passwordHash: 'nopassword',
+          role: ROLES.MANAGER,
+          isActive: true,
+        });
+      } catch (err) {
+        // ignore duplicate or creation error
+      }
+    }
+
+    if (!defaultUser) {
+      defaultUser = {
+        _id: '666666666666666666666666',
+        name: 'Default User',
+        email: 'admin@nexview.local',
+        role: ROLES.MANAGER,
+        isActive: true,
+      };
+    }
   }
 
-  let payload;
-  try {
-    payload = jwt.verify(token, env.jwt.accessSecret, { ignoreExpiration: true });
-  } catch (err) {
-    throw err; // handled centrally in errorHandler (JsonWebTokenError / TokenExpiredError)
-  }
-
-  const user = await User.findById(payload.sub).select('-passwordHash');
-  if (!user || !user.isActive) {
-    throw new UnauthorizedError('Account is inactive or no longer exists');
-  }
-
-  req.user = user; // available to all downstream handlers
+  req.user = defaultUser;
   next();
 });
 

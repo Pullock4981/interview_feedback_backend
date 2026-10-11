@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.use(authenticate);
 
+router.post('/import-doc', courseTemplateController.importDoc);
 router.get('/:course', courseTemplateController.getTemplate);
 router.put('/:course', courseTemplateController.upsertTemplate);
 

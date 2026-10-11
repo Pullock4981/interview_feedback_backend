@@ -1,6 +1,5 @@
 const express = require('express');
 
-const authRoutes = require('../modules/auth/auth.routes');
 const userRoutes = require('../modules/users/user.routes');
 const studentRoutes = require('../modules/students/student.routes');
 const interviewRoutes = require('../modules/interviews/interview.routes');
@@ -18,7 +17,6 @@ const courseTemplateRoutes = require('../modules/courseTemplates/courseTemplate.
  */
 const router = express.Router();
 
-router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/students', studentRoutes);
 router.use('/interviews', interviewRoutes);

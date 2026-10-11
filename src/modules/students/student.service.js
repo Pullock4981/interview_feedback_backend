@@ -198,9 +198,7 @@ const studentService = {
   },
 
   async listStudents({ user, ...filters }) {
-    // Scoping rule (PRD 6.2/6.1 role matrix): instructors only ever see
-    // their own assigned students; managers see everyone.
-    const scoped = user.role === ROLES.INSTRUCTOR ? { ...filters, instructorId: user._id } : filters;
+    const scoped = filters;
     const { items, total } = await studentRepository.list(scoped);
     return { items, total, page: filters.page, pageSize: filters.pageSize };
   },
@@ -208,13 +206,6 @@ const studentService = {
   async getStudentById(id, user) {
     const student = await studentRepository.findById(id);
     if (!student) throw new NotFoundError('Student not found');
-
-    if (
-      user.role === ROLES.INSTRUCTOR &&
-      (!student.assignedInstructor || student.assignedInstructor._id.toString() !== user._id.toString())
-    ) {
-      throw new ForbiddenError('You are not assigned to this student');
-    }
     return student;
   },
 

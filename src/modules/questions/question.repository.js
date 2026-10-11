@@ -5,7 +5,7 @@ const questionRepository = {
     return QuestionBank.create(data);
   },
   list(instructorId) {
-    return QuestionBank.find({ instructor: instructorId }).sort({ createdAt: -1 });
+    return QuestionBank.find().sort({ createdAt: -1 });
   },
   findById(id) {
     return QuestionBank.findById(id);

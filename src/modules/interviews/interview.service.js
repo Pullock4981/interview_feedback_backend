@@ -15,13 +15,6 @@ const interviewService = {
     const student = await studentRepository.findById(studentId);
     if (!student) throw new NotFoundError('Student not found');
 
-    if (
-      instructor.role === ROLES.INSTRUCTOR &&
-      (!student.assignedInstructor || student.assignedInstructor._id.toString() !== instructor._id.toString())
-    ) {
-      throw new ForbiddenError('You are not assigned to this student');
-    }
-
     let interview = await interviewRepository.findActiveForStudent(studentId);
     
     if (interview) {
@@ -65,7 +58,7 @@ const interviewService = {
   },
 
   async listInterviews({ user, ...filters }) {
-    const scoped = user.role === ROLES.INSTRUCTOR ? { ...filters, instructorId: user._id } : filters;
+    const scoped = filters;
     const { items, total } = await interviewRepository.list(scoped);
     
     // Fetch feedbacks for all returned interviews and attach them
@@ -74,9 +67,13 @@ const interviewService = {
     
     // Create a map for O(1) lookup
     const feedbackMap = {};
-    feedbacks.forEach(f => {
-      feedbackMap[f.interview.toString()] = f;
-    });
+    if (Array.isArray(feedbacks)) {
+      feedbacks.forEach(f => {
+        if (f && f.interview) {
+          feedbackMap[f.interview.toString()] = f;
+        }
+      });
+    }
 
     // Attach feedback to the items array (using lean() on repository side would be better, but we can just map it)
     const itemsWithFeedback = items.map(item => {
@@ -93,13 +90,6 @@ const interviewService = {
   async getInterviewById(id, user) {
     const interview = await interviewRepository.findById(id);
     if (!interview) throw new NotFoundError('Interview not found');
-
-    if (
-      user.role === ROLES.INSTRUCTOR &&
-      interview.instructor._id.toString() !== user._id.toString()
-    ) {
-      throw new ForbiddenError('You are not the instructor assigned to this interview');
-    }
     return interview;
   },
 
